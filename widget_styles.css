@@ -1,0 +1,21 @@
+QWidget {
+    font-family: "Book Antiqua";
+    font-size: 18pt;
+    color: #00ef00;
+    background-color: black;
+}
+
+DescribedLabel {
+    background-color: black;
+    color: #00ef00;
+}
+
+InputLineEdit {
+    font-size: 16pt;
+    color: #00ef00;
+}
+
+CustomHintBarLabel {
+    font-size: 16pt;
+    color: #33ff00;
+}

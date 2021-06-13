@@ -75,22 +75,22 @@ class RoomMainWindow(QtWidgets.QMainWindow):
                         # self.line_frame.widgets.append(new_line_obj)
                         break
 
-                print(f'analyzing arguments; aeg_obj: {arg_obj}')
+                # print(f'analyzing arguments; aeg_obj: {arg_obj}')
                 for i in self.args_frame.widgets:
-                    print(f'analyzing {i}, BO: {i.bound_object}')
+                    # print(f'analyzing {i}, BO: {i.bound_object}')
                     # print(i.bound_object.__repr__())
                     if i.bound_object is arg_obj:
-                        print(f'found! {i.bound_object}')
+                        # print(f'found! {i.bound_object}')
                         # print('previous: ' + i.bound_object.__repr__())
                         i.update_bound_object(new_arg_object)
                         self.client.args.remove(arg_obj)
                         self.client.args.append(new_arg_object)
-                        print(f'new_object: {new_arg_object}')
+                        # print(f'new_object: {new_arg_object}')
                         # print('new: ' + i.bound_object.__repr__())
                         # self.args_frame.widgets.remove(i)
                         # self.args_frame.widgets.append(new_arg_object)
                         break
-                print(self.client.args)
+                # print(self.client.args)
 
             return True
         return False

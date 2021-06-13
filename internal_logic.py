@@ -2,7 +2,7 @@ from PySide2.QtCore import QRunnable
 import typing
 import re
 import random
-import lines
+import line_mechanics
 
 
 # i need a bunch of QRunnables that implement Line's effect to be called when an input received
@@ -106,10 +106,13 @@ class Client:
         self.players = [Player(f'username{x}', f'h', 10, PlayerGUIState()) for x in range(1)] + [self.current_player]
         self.lines = [AccessibleLine(f'caramelldansen', f'caramelldansen_description', 'color'),
                       AccessibleLine('font_size', 'font_size_description', 'integer')]
-        self.args = [AccessibleArgument('integer', str(10)), AccessibleArgument('color', 'orange')]
+        self.args = [AccessibleArgument('integer', str(10)), AccessibleArgument('color', 'orange'),
+                     AccessibleArgument('integer', str(20)), AccessibleArgument('color', 'magenta')]
 
         # serverless demo only
-        self.lines_container = lines.PlayableLinesContainer()
+        # self.lines_container = lines.PlayableLinesContainer()
+        self.line_executioner = line_mechanics.LineExecutioner()
+
 
     def check_line(self, line: str):
         #  -> typing.Tuple[bool, str] to be changed
@@ -163,15 +166,15 @@ class Client:
         room_main_ui.RoomMainWindow.signals.update_hint_bar_signal.emit('200 OK')
         self.send_line(line, True)
         if player_object is self.current_player:
-            self.lines_container.get_line_runnable(line_object.call_name, arg_object.value).play()
+            self.line_executioner.execute(line, argument)
         return True, line_object, arg_object
 
     def send_line(self, line: str, success: bool):
         pass
 
     def get_new_line(self):
-        line_obj = self.lines_container.lines[random.choice(list(self.lines_container.lines.keys()))]
-        return AccessibleLine(f'{line_obj.__name__}', f'{line_obj.__name__}_descr', f'{self.lines_container.args_types[line_obj.__name__]}')
+        line_obj = self.line_executioner.lines[random.choice(list(self.line_executioner.lines.keys()))]
+        return AccessibleLine(line_obj.call_name, line_obj.description, line_obj.arg_type)
 
     def get_new_arg(self):
         x = random.choice((('color', random.choice(['red', 'green', 'yellow', 'magenta', 'blue', 'pink', 'violet', 'orange'])),

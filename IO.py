@@ -4,7 +4,7 @@ import random, string
 # import room_main_ui
 import application
 import line_effects
-import lines
+import line_mechanics
 
 
 class IOWorkerThread(QtCore.QRunnable):
@@ -13,7 +13,7 @@ class IOWorkerThread(QtCore.QRunnable):
         self.app = app
         self.switch = True
         self.app.main_window.signals.shutdown_signal.connect(self.shutdown)
-        self.lines_container = lines.PlayableLinesContainer(app)
+        self.lines_container = line_mechanics.PlayableLinesContainer(app)
 
     def shutdown(self):
         self.switch = False

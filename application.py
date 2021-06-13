@@ -26,6 +26,6 @@ if __name__ == '__main__':
     # threadpool = QtCore.QThreadPool()
     # io_thrd = IO.IOWorkerThread(app)
     # threadpool.start(io_thrd)
-    app.main_window.client.lines_container.ready(app)
+    app.main_window.client.line_executioner.load(app)
 
     app.exec_()

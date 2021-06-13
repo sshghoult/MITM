@@ -1,8 +1,11 @@
+"""Module that holds all possible line objects"""
 import line_effects
 import abc
 
 
 class AbstractBaseLine(abc.ABC):
+    """Line is a class with classmethod play that constructs effect object and runs it. Effect_type is a class among implemented effect
+    types, call_name, arg_type and description are content-defined strings"""
     effect_type = None
     call_name = None
     arg_type = None
@@ -11,6 +14,8 @@ class AbstractBaseLine(abc.ABC):
     @classmethod
     @abc.abstractmethod
     def play(cls, app_reference, argument):
+        """Class method that constructs effect object and runs it.
+        Input argument is external and is not necessarily used as an actual argument of any function"""
         ...
 
 

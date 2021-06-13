@@ -10,6 +10,7 @@ from lables import PlayerLabel, LineLabel, ArgumentLabel
 
 
 class CommunicationSignals(QtCore.QObject):
+    """GUI-package specific object to ease communication between widgets and threads"""
     update_css_signal = QtCore.Signal(dict)
     shutdown_signal = QtCore.Signal()
     update_hint_bar_signal = QtCore.Signal(str)
@@ -17,6 +18,7 @@ class CommunicationSignals(QtCore.QObject):
 
 
 class RoomMainWindow(QtWidgets.QMainWindow):
+    """Main GUI class-hub that handles widgets, their layout and behavior"""
     signals = CommunicationSignals()
 
     def __init__(self, client_object: internal_logic.Client, *args, **kwargs):
@@ -26,6 +28,7 @@ class RoomMainWindow(QtWidgets.QMainWindow):
         self.installEventFilter(self)
 
     def setup_ui(self):
+        """GUI-package specific method that shapes GUI"""
         self.setWindowTitle('MITM')
         main_layout = QtWidgets.QGridLayout(self)
 
@@ -54,6 +57,7 @@ class RoomMainWindow(QtWidgets.QMainWindow):
         self.signals.update_css_signal.connect(self.update_css)
 
     def eventFilter(self, watched: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        """GUI-package method. Filters events in the window"""
         if event.type() == QtCore.QEvent.KeyPress and event.key() == 16777220:
             result, line_obj, arg_obj = self.client.check_line(self.chat_frame.entry_frame.input_entry.text())
             self.signals.append_to_text_browser.emit(self.chat_frame.entry_frame.input_entry.text())
@@ -94,15 +98,12 @@ class RoomMainWindow(QtWidgets.QMainWindow):
 
             return True
         return False
-        # if event.type() == QtCore.QEvent.KeyPress:
-        #     print(event.key())
-        # return False
 
-    def update_window_title(self, title: str):
-        self.setWindowTitle(title)
 
     # should be new_data: Dict[<widget_name>, Dict[<property>: <value>]]
     def update_css(self, new_data: typing.Dict[str, typing.Dict[str, str]]):
+        """Updates CSS of the window (GUI-package specific mechanism.
+        new_data format is Dict[<widget_name>: Dict[<property>: <value>]]"""
         # print(self.client.current_player.GUIstate.state)
         # print(new_data)
         for widget in new_data:
@@ -120,13 +121,13 @@ class RoomMainWindow(QtWidgets.QMainWindow):
         # print('updated_css')
 
     def event(self, event: QtCore.QEvent) -> bool:
+        """GUI-package specific method called on every event in the window. Overridden for flexibility if needed"""
         return super().event(event)
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        """GUI-package specific method called on app shutdown. Overridden to properly stop threads."""
         self.signals.shutdown_signal.emit()
         super().closeEvent(event)
 
 # TODO: implement a timer
 # TODO: behaviour-changing effects
-# (but not for the demo, don't have time to)
-# TODO: create venv  with required packages on the flash drive

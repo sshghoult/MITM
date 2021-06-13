@@ -4,7 +4,7 @@ import internal_logic
 
 
 class DescribedLabel(QtWidgets.QLabel):
-    """Label, which purpose is providing additional info on object by click
+    """Label, whose purpose is providing additional info on object by click
     (e.g. description of the line, enemies' states)"""
 
     def __init__(self, parent, maintext: str,
@@ -67,11 +67,6 @@ class PlayerLabel(DescribedLabel):
 
 class LineLabel(DescribedLabel):
     def __init__(self, parent, bound_line_object: internal_logic.AccessibleLine):
-        """
-
-        :param parent:
-        :param bound_line_object:
-        """
         super().__init__(parent, str(bound_line_object),
                          bound_line_object.description)
         self.bound_object = bound_line_object

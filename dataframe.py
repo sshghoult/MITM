@@ -6,6 +6,7 @@ from lables import PlayerLabel, LineLabel, ArgumentLabel
 
 
 class DataFrame(QtWidgets.QFrame):
+    """Versatile GUI object that holds DescribedLabels of one type. Used for Frames with Player, Line and Argument custom labels"""
     def __init__(self, parent, objects: list,
                  label_type: typing.Union[typing.Type[PlayerLabel], typing.Type[LineLabel], typing.Type[ArgumentLabel]], *flags):
         super().__init__(parent, *flags)

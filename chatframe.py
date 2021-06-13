@@ -2,13 +2,12 @@ from PySide2 import QtWidgets, QtCore, QtGui
 
 
 class ChatFrame(QtWidgets.QFrame):
+    """GUI frame object to hold text-browser-related objects"""
     def __init__(self, parent, *flags):
         super().__init__(parent, *flags)
         mainlayout = QtWidgets.QGridLayout(self)
         self.setLayout(mainlayout)
         browser = ControlledTextBrowser(self)
-        # browser.setSource(QtCore.QUrl('test_source.txt'))
-        # browser.setTextColor(QtGui.QColor('white'))
         with open('test_source.txt', 'r') as source:
             browser.setHtml(source.read())
         mainlayout.addWidget(browser)
@@ -18,6 +17,8 @@ class ChatFrame(QtWidgets.QFrame):
 
 
 class EntryFrame(QtWidgets.QFrame):
+    """GUI frame object to hold InputLineEdit, CustomHintBarLabel, mitm_checkbox and timer objects"""
+    # timer is not implemented yet
     def __init__(self, parent: QtWidgets.QWidget, *flags):
         super().__init__(parent, *flags)
         mainlayout = QtWidgets.QVBoxLayout()
@@ -36,6 +37,7 @@ class EntryFrame(QtWidgets.QFrame):
 
 
 class CustomHintBarLabel(QtWidgets.QLabel):
+    """Label for hint bar with autoinsertion of required html tags"""
     def __init__(self, text, parent, *flags):
         super().__init__(f"<i>{text}</i>", parent, *flags)
 
@@ -44,6 +46,7 @@ class CustomHintBarLabel(QtWidgets.QLabel):
 
 
 class InputLineEdit(QtWidgets.QLineEdit):
+    """LineEdit Overridden for flexibility purpose and behavior control"""
     def __init__(self, parent, *flags):
         super().__init__(parent, *flags)
         self.installEventFilter(self)
@@ -59,6 +62,7 @@ class InputLineEdit(QtWidgets.QLineEdit):
 
 
 class ControlledTextBrowser(QtWidgets.QTextBrowser):
+    """TextBrowser overridden for flexibility purpose and behavior control"""
     def __init__(self, parent):
         super().__init__(parent)
         from room_main_ui import RoomMainWindow

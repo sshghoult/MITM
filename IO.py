@@ -8,6 +8,7 @@ import line_mechanics
 
 
 class IOWorkerThread(QtCore.QRunnable):
+    """Temporarily used GUI-package specific Thread-like object to imitate input of data and therefore mock server-sent data"""
     def __init__(self, app: application.Application):
         super().__init__()
         self.app = app

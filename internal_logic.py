@@ -8,50 +8,48 @@ import line_mechanics
 # i need a bunch of QRunnables that implement Line's effect to be called when an input received
 
 class AccessibleLine:
-    """Function that player can currently call"""
-
+    """An object of internal logic whose information is to be displayed on the GUI's line-describing labels"""
+    # has nothing to do with accessibility
     def __init__(self, call_name: str, description: str, arg_type: str):
         self.arg_type = arg_type
         self.description = description
         self.call_name = call_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.call_name + f"({self.arg_type})"
 
 
 class Player:
     def __init__(self, username: str, masked_name: str, hitpoints: int, GUIstate: 'PlayerGUIState'):
+        """An object of internal logic that contains information about player in the lobby"""
         self.hitpoints = hitpoints
         self.masked_name = masked_name
         self.username = username
         self.GUIstate = GUIstate
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.masked_name + f' ({self.username})'
 
-    def current_state_str(self):
+    def current_state_str(self) -> str:
         return self.GUIstate.construct_description()
 
 
 class LocalPlayer(Player):
+    """An object of internal logic that contains information about player that uses this client"""
     def __init__(self, username: str, masked_name: str, hitpoints: int, GUIstate: 'PlayerGUIState'):
         super().__init__(username, masked_name, hitpoints, GUIstate)
         self.lines = set()
         self.args = set()
 
-    # def execute_line(self, line: str):
-    #     # line = "masked_name.call_name(argument)"
-    #     target, line = line.split('.')
-    #     if target
-
 
 class AccessibleArgument:
-    """Argument that player can currently use in a function call"""
+    """An object of internal logic whose information is to be displayed on the GUI's line-describing labels"""
+    # has nothing to do with accessibility
     possible_types = {'color', 'integer'}
 
-    def __init__(self, type: str, value: str):
-        if type in self.possible_types:
-            self.type = type
+    def __init__(self, _type: str, value: str):
+        if _type in self.possible_types:
+            self.type = _type
         else:
             raise ValueError("Incorrect type of the argument")
         self.value = value
@@ -61,7 +59,7 @@ class AccessibleArgument:
 
 
 class PlayerGUIState:
-    # one instance per player to hold info about the state of their gui instead of *states
+    """An object of internal logic to contain and display information about state of player's GUI"""
 
     def __init__(self):
         with open('widget_styles.css', 'r') as source:
@@ -82,6 +80,7 @@ class PlayerGUIState:
         # print()
 
     def construct_css(self) -> str:
+        """Method that forms syntactically correct CSS string from data to apply to the widgets"""
         # print(self.state)
         # return ';\n'.join(f'{i}: {self.state[i]}' for i in self.state)
         result = []
@@ -93,6 +92,7 @@ class PlayerGUIState:
         return '\n'.join(result)
 
     def construct_description(self) -> str:
+        """Method that constructs a description of player's GUI state to display on the GUI"""
         # return '<br/>'.join(f'{str(i)}: {self.state[i]}' for i in self.state)
         return f'''<p><small>{'<br/>'.join((f"{i}: {self.state['QWidget'][i]}" for i in self.state["QWidget"]))}</small></p>'''
 
@@ -101,6 +101,7 @@ class PlayerGUIState:
 
 
 class Client:
+    """Main unit of the internal logic that manages everything and connects logic to GUI"""
     def __init__(self):
         self.current_player = Player('current_player', 'c', 10, PlayerGUIState())
         self.players = [Player(f'username{x}', f'h', 10, PlayerGUIState()) for x in range(1)] + [self.current_player]
@@ -114,10 +115,12 @@ class Client:
         self.line_executioner = line_mechanics.LineExecutioner()
 
 
-    def check_line(self, line: str):
+    def check_line(self, line: str) -> typing.Optional[typing.Tuple[bool, None, None], typing.Tuple[bool, AccessibleLine, AccessibleArgument]]:
+        """Check format to be correct, line and argument meant to be accessible and appropriate.
+        Returns result of check and line and argument objects if these were correct and therefore found"""
         #  -> typing.Tuple[bool, str] to be changed
         import room_main_ui
-        # yes, still terrible approach
+        # yes, it is terrible approach still, but alternatives are no better
         if re.fullmatch(r'.+\..+\(.+\)', line) is None:
             room_main_ui.RoomMainWindow.signals.update_hint_bar_signal.emit('incorrect format')
             self.send_line(line, False)
@@ -176,7 +179,9 @@ class Client:
         line_obj = self.line_executioner.lines[random.choice(list(self.line_executioner.lines.keys()))]
         return AccessibleLine(line_obj.call_name, line_obj.description, line_obj.arg_type)
 
-    def get_new_arg(self):
+
+    def get_new_arg(self) -> AccessibleArgument:
+        """Get new argument from the pool"""
         x = random.choice((('color', random.choice(['red', 'green', 'yellow', 'magenta', 'blue', 'pink', 'violet', 'orange'])),
                            ('integer', str(random.randint(10, 30)))))
         return AccessibleArgument(*x)

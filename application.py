@@ -11,6 +11,9 @@ import random
 
 
 class Application(QtWidgets.QApplication):
+    """
+    Subclass of QApplication to achieve flexibility when needed
+    """
     def __init__(self, sys_arguments):
         super().__init__(sys_arguments)
         self.main_window = room_main_ui.RoomMainWindow(internal_logic.Client())
